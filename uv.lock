@@ -371,7 +371,7 @@ wheels = [
 
 [[package]]
 name = "avatar"
-version = "0.1.0"
+version = "0.1"
 source = { virtual = "services/avatar/src" }
 dependencies = [
     { name = "echo-common" },
@@ -784,6 +784,18 @@ wheels = [
 ]
 
 [[package]]
+name = "colorlog"
+version = "6.10.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a2/61/f083b5ac52e505dfc1c624eafbf8c7589a0d7f32daa398d2e7590efa5fda/colorlog-6.10.1.tar.gz", hash = "sha256:eb4ae5cb65fe7fec7773c2306061a8e63e02efc2c72eba9d27b0fa23c94f1321", size = 17162, upload-time = "2025-10-16T16:14:11.978Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6d/c1/e419ef3723a074172b68aaa89c9f3de486ed4c2399e2dbd8113a4fdcaf9e/colorlog-6.10.1-py3-none-any.whl", hash = "sha256:2d7e8348291948af66122cff006c9f8da6255d224e7cf8e37d8de2df3bad8c9c", size = 11743, upload-time = "2025-10-16T16:14:10.512Z" },
+]
+
+[[package]]
 name = "comm"
 version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1097,8 +1109,9 @@ sdist = { url = "https://files.pythonhosted.org/packages/a2/55/8f8cab2afd404cf57
 [[package]]
 name = "echo-common"
 version = "0.1.0"
-source = { git = "ssh://git@github.com/ramonlabs/echo.git?subdirectory=services%2Fcommon#2bcdf4d8c2f849adbb95fe36bd87b1a9a28742a6" }
+source = { git = "ssh://git@github.com/ramonlabs/echo.git?subdirectory=services%2Fcommon#28165c273fc1db873df70457ecf7c52e096e8678" }
 dependencies = [
+    { name = "colorlog" },
     { name = "httpx" },
     { name = "mistune" },
 ]
@@ -2002,7 +2015,7 @@ wheels = [
 
 [[package]]
 name = "llm"
-version = "0.1.0"
+version = "0.1"
 source = { virtual = "services/llm/src" }
 dependencies = [
     { name = "ddgs" },
@@ -2293,7 +2306,7 @@ wheels = [
 
 [[package]]
 name = "memory"
-version = "0.1.0"
+version = "0.1"
 source = { virtual = "services/memory/src" }
 dependencies = [
     { name = "echo-common" },
@@ -4446,7 +4459,7 @@ wheels = [
 
 [[package]]
 name = "stt"
-version = "0.1.0"
+version = "0.1"
 source = { virtual = "services/stt/src" }
 dependencies = [
     { name = "aiofiles" },
@@ -4802,7 +4815,7 @@ wheels = [
 
 [[package]]
 name = "tts"
-version = "0.1.0"
+version = "0.1"
 source = { virtual = "services/tts/src" }
 dependencies = [
     { name = "cachetools" },
