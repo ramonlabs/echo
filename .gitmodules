@@ -16,3 +16,6 @@
 [submodule "services/panel"]
 	path = services/panel
 	url = git@github.com:ramonlabs/echo-panel.git
+[submodule "services/training"]
+	path = services/training
+	url = git@github.com:ramonlabs/echo-training.git
