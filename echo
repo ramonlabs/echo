@@ -1,62 +1,37 @@
 #!/usr/bin/env bash
 
 BASE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SERVICES=(tts:src/app.py:47100 llm:src/app.py:47101 stt:src/app.py:47102 avatar:src/server.py:47103 memory:src/app.py:47104 panel:serve.py:47105)
+SERVICES=(tts llm stt avatar memory panel)
 
 export PC_PORT_NUM=47106
 
 start() {
-    if [ ! -f "$BASE/.pids/.setup" ]; then
-        echo "run ./echo setup first."
-        exit 1
-    fi
+    [ ! -f "$BASE/.pids/.setup" ] && echo "run ./echo setup first." && exit 1
     cd "$BASE"
     process-compose --config "$BASE/process-compose.yaml" up --detached
-    echo "started in background. attach: ./echo attach   stop: ./echo stop"
+    echo "started. attach: ./echo attach   stop: ./echo stop"
 }
 
-attach() { process-compose attach; }
-
-stop() { process-compose down; }
+stop()    { process-compose down; }
+attach()  { process-compose attach; }
+restart() { stop; start; }
 
 setup() {
     git submodule update --init --recursive
     uv sync
-    for entry in "${SERVICES[@]}"; do
-        IFS=':' read -r name script port <<< "$entry"
-        if [ -f "$BASE/services/$name/src/setup.py" ]; then
+    for name in "${SERVICES[@]}"; do
+        [ -f "$BASE/services/$name/src/setup.py" ] && \
             ( cd "$BASE/services/$name/src" && python3 setup.py --no-venv )
-        fi
     done
     mkdir -p "$BASE/.pids"
     touch "$BASE/.pids/.setup"
-}
-
-clean() {
-    # never delete from the filesystem root: cant be too cautious
-    if [ -z "$BASE" ] || [ "$BASE" = "/" ]; then
-        echo "refusing to run with BASE='$BASE'"
-        exit 1
-    fi
-    process-compose down 2>/dev/null
-    rm -rf "$BASE/.venv" "$BASE/.pids"
-    for entry in "${SERVICES[@]}"; do
-        IFS=':' read -r name script port <<< "$entry"
-        rm -rf "$BASE/services/$name/src/private" "$BASE/services/$name/src/$name-venv"
-    done
-    rm -rf "$BASE/services/memory/data"
-    local caches=(__pycache__ .pytest_cache .mypy_cache .ruff_cache "*.egg-info")
-    for pat in "${caches[@]}"; do
-        find "$BASE/services" -type d -name "$pat" -exec rm -rf {} + 2>/dev/null
-    done
-    echo "cleaned."
 }
 
 case "$1" in
     start)   start ;;
     attach)  attach ;;
     stop)    stop ;;
+    restart) restart ;;
     setup)   setup ;;
-    clean)   clean ;;
-    *)       echo "usage: ./echo start|attach|stop|setup|clean" ;;
+    *)       echo "usage: ./echo start|attach|stop|restart|setup" ;;
 esac
