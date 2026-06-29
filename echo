@@ -5,14 +5,40 @@ SERVICES=(tts llm stt avatar memory panel)
 
 export PC_PORT_NUM=47106
 
-start() {
-    [ ! -f "$BASE/.pids/.setup" ] && echo "run ./echo setup first." && exit 1
-    cd "$BASE"
-    process-compose --config "$BASE/process-compose.yaml" up --detached
-    echo "started. attach: ./echo attach   stop: ./echo stop"
+usage() {
+    echo "Echo: AI VTuber"
+    echo ""
+    echo "Usage:"
+    echo "  ./echo <command>"
+    echo ""
+    echo "Commands:"
+    echo "  start      Start all services"
+    echo "  stop       Stop all services"
+    echo "  restart    Restart all services"
+    echo "  attach     Attach to the process monitor"
+    echo "  setup      Install dependencies and initialize services"
 }
 
-stop()    { process-compose down; }
+start() {
+    if [ ! -f "$BASE/.pids/.setup" ]; then
+        echo "Not initialized. Run ./echo setup first." && exit 1
+    fi
+    if ! command -v process-compose &>/dev/null; then
+        echo "Error: process-compose not found."
+        echo "  Install: https://github.com/F1bonacc1/process-compose"
+        exit 1
+    fi
+    cd "$BASE"
+    process-compose --config "$BASE/process-compose.yaml" up --detached >/dev/null
+    echo "Echo running."
+    echo "  attach    ./echo attach"
+    echo "  stop      ./echo stop"
+}
+
+stop() {
+    process-compose down 2>/dev/null || true
+    echo "Echo stopped."
+}
 attach()  { process-compose attach; }
 restart() { stop; start; }
 
@@ -21,7 +47,7 @@ setup() {
     uv sync
     for name in "${SERVICES[@]}"; do
         [ -f "$BASE/services/$name/src/setup.py" ] && \
-            ( cd "$BASE/services/$name/src" && python3 setup.py --no-venv )
+            ( cd "$BASE/services/$name/src" && "$BASE/.venv/bin/python" setup.py --no-venv )
     done
     mkdir -p "$BASE/.pids"
     touch "$BASE/.pids/.setup"
@@ -29,9 +55,9 @@ setup() {
 
 case "$1" in
     start)   start ;;
-    attach)  attach ;;
     stop)    stop ;;
     restart) restart ;;
+    attach)  attach ;;
     setup)   setup ;;
-    *)       echo "usage: ./echo start|attach|stop|restart|setup" ;;
+    *)       usage ;;
 esac
