@@ -26,3 +26,7 @@ llm = { workspace = true }
 memory = { workspace = true }
 stt = { workspace = true }
 tts = { workspace = true }
+echo-common = { path = "services/common", editable = true }
+
+[tool.uv]
+override-dependencies = ["echo-common"]
