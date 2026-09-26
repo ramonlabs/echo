@@ -1,17 +1,22 @@
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
 
 import httpx
+
+from echo_common.http import (
+    HTTP_ERR_INTERNAL,
+    HTTP_ERR_RATE_LIMIT,
+    HTTP_ERR_UNAUTHORIZED,
+)
 
 
 class ServiceError(Exception):
     """Base domain error carrying a stable code and a human-readable message."""
 
-    code: str = "internal_error"
-    message: str = "Something went wrong."
-    http_status: int = 500
+    code = "internal_error"
+    message = "Something went wrong."
+    http_status = HTTP_ERR_INTERNAL
 
-    def __init__(self, message: str | None = None):
+    def __init__(self, message=None):
         if message:
             self.message = message
         super().__init__(self.message)
@@ -47,42 +52,34 @@ class SttError(ServiceError):
     message = "Speech-to-text failed."
 
 
-# named to avoid shadowing the builtin MemoryError
-class MemoryServiceError(ServiceError):
-    code = "memory_error"
-    http_status = 502
-    message = "Memory service failed."
-
-
-def to_payload(exc: ServiceError) -> dict[str, str]:
+def to_payload(exc):
     """Shape a domain error into the wire vocabulary clients consume."""
     return {"code": exc.code, "message": exc.message}
 
 
-def as_service_error(exc: Exception) -> ServiceError:
+def as_service_error(exc):
     """Pass through domain errors, wrap anything unexpected as generic."""
     return exc if isinstance(exc, ServiceError) else ServiceError()
 
 
 # each service gets its own error types used when mapping an upstream failure
-_AUTH: dict[str, type[ServiceError]] = {"tts": TtsAuthError}
-_UNAVAILABLE: dict[str, type[ServiceError]] = {
+_AUTH = {"tts": TtsAuthError}
+_UNAVAILABLE = {
     "tts": TtsUnavailable,
     "llm": LlmError,
     "stt": SttError,
-    "memory": MemoryServiceError,
 }
 
 
-def from_upstream(service: str, exc: Exception) -> ServiceError:
+def from_upstream(service, exc):
     """Map an upstream httpx failure to the right domain error."""
     unavailable = _UNAVAILABLE.get(service, ServiceError)
 
     if isinstance(exc, httpx.HTTPStatusError):
         status = exc.response.status_code
-        if status == 401:
+        if status == HTTP_ERR_UNAUTHORIZED:
             return _AUTH.get(service, unavailable)()
-        if status == 429:
+        if status == HTTP_ERR_RATE_LIMIT:
             return LlmRateLimited()
         return unavailable()
 
@@ -91,7 +88,7 @@ def from_upstream(service: str, exc: Exception) -> ServiceError:
 
 
 @asynccontextmanager
-async def upstream(service: str) -> AsyncIterator[None]:
+async def upstream(service):
     """Wrap an httpx call block, converting transport errors to domain errors."""
     try:
         yield

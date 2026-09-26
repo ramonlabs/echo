@@ -1,7 +1,7 @@
+from echo_common.config import load_cfg
 from echo_common.errors import (
     LlmError,
     LlmRateLimited,
-    MemoryServiceError,
     ServiceError,
     SttError,
     TtsAuthError,
@@ -11,28 +11,44 @@ from echo_common.errors import (
     to_payload,
     upstream,
 )
+from echo_common.http import (
+    HTTP_ERR_BAD_GATEWAY,
+    HTTP_ERR_INTERNAL,
+    HTTP_ERR_RATE_LIMIT,
+    HTTP_ERR_UNAUTHORIZED,
+    HTTP_ERR_UNAVAILABLE,
+    HTTP_OK,
+)
 from echo_common.log import configure as configure_logging
-from echo_common.log import logger
+from echo_common.log import get_logger, logger
 from echo_common.meta import service_version
 from echo_common.paths import resolve_path, service_root
-from echo_common.text import strip_markdown
+from echo_common.text import speakable, strip_markdown
 
 __all__ = [
-    "strip_markdown",
-    "resolve_path",
-    "service_root",
-    "service_version",
-    "configure_logging",
-    "logger",
+    "HTTP_ERR_BAD_GATEWAY",
+    "HTTP_ERR_INTERNAL",
+    "HTTP_ERR_RATE_LIMIT",
+    "HTTP_ERR_UNAUTHORIZED",
+    "HTTP_ERR_UNAVAILABLE",
+    "HTTP_OK",
     "LlmError",
     "LlmRateLimited",
-    "MemoryServiceError",
     "ServiceError",
     "SttError",
     "TtsAuthError",
     "TtsUnavailable",
     "as_service_error",
+    "configure_logging",
     "from_upstream",
+    "get_logger",
+    "load_cfg",
+    "logger",
+    "resolve_path",
+    "service_root",
+    "service_version",
+    "speakable",
+    "strip_markdown",
     "to_payload",
     "upstream",
 ]
