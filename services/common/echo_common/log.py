@@ -32,9 +32,4 @@ def configure(debug=False):
     root.setLevel(level)
 
 
-def get_logger(name):
-    """Return a named logger so its lines are tagged with where they came from."""
-    return logging.getLogger(name)
-
-
 logger = logging.getLogger()
