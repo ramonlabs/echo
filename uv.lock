@@ -3211,13 +3211,10 @@ dependencies = [
     { name = "echo-common" },
     { name = "fastapi" },
     { name = "faster-whisper" },
-    { name = "numpy" },
     { name = "pydantic" },
     { name = "python-multipart" },
     { name = "pyyaml" },
     { name = "uvicorn" },
-    { name = "webrtcvad" },
-    { name = "websockets" },
 ]
 
 [package.dev-dependencies]
@@ -3233,13 +3230,10 @@ requires-dist = [
     { name = "echo-common", git = "https://github.com/ramonlabs/echo.git?subdirectory=services%2Fcommon" },
     { name = "fastapi", specifier = ">=0.115.0" },
     { name = "faster-whisper", specifier = ">=1.0.0" },
-    { name = "numpy", specifier = ">=1.26.0" },
     { name = "pydantic", specifier = ">=2.9.0" },
     { name = "python-multipart", specifier = ">=0.0.12" },
     { name = "pyyaml", specifier = ">=6.0.0" },
     { name = "uvicorn", specifier = ">=0.32.0" },
-    { name = "webrtcvad", specifier = ">=2.0.10" },
-    { name = "websockets", specifier = ">=12.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -3611,12 +3605,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/ce/e5/e272bb9a045105a1f
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0a/07/57ebf7a6798b016c064bd0ca81b4c6a99daa4dc377b898bc7b41eb6b5af0/weasel-1.0.0-py3-none-any.whl", hash = "sha256:89518acee027f49d743126c3502d35e6dd14f5768be5c37c9af47c171b6005cc", size = 50713, upload-time = "2026-03-20T08:10:23.637Z" },
 ]
-
-[[package]]
-name = "webrtcvad"
-version = "2.0.10"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/89/34/e2de2d97f3288512b9ea56f92e7452f8207eb5a0096500badf9dfd48f5e6/webrtcvad-2.0.10.tar.gz", hash = "sha256:f1bed2fb25b63fb7b1a55d64090c993c9c9167b28485ae0bcdd81cf6ede96aea", size = 66156, upload-time = "2017-01-07T23:05:18.732Z" }
 
 [[package]]
 name = "websockets"
