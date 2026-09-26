@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "rules": {
+    "eslint/no-await-in-loop": "off",
+    "eslint/no-underscore-dangle": "off",
+    "unicorn/prefer-add-event-listener": "off",
+    "unicorn/no-array-sort": "off",
+    "unicorn/prefer-set-has": "off"
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/CubismSdkForWeb-5-r.5/**",
+    "**/*venv*/**"
+  ]
+}
