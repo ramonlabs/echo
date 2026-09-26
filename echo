@@ -43,7 +43,9 @@ attach()  { process-compose attach; }
 restart() { stop; start; }
 
 setup() {
-    git submodule update --init --recursive
+    for name in "${SERVICES[@]}" training; do
+        [ -e "$BASE/services/$name/.git" ] || git submodule update --init --recursive -- "services/$name"
+    done
     uv sync
     for name in "${SERVICES[@]}"; do
         [ -f "$BASE/services/$name/src/setup.py" ] && \
